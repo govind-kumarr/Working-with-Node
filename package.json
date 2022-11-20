@@ -1,0 +1,19 @@
+{
+  "name": "working-with-node",
+  "version": "1.0.0",
+  "description": "Complete Node.js Guide",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/govind-kumarr/Working-with-Node.git"
+  },
+  "author": "Govind Kumar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/govind-kumarr/Working-with-Node/issues"
+  },
+  "homepage": "https://github.com/govind-kumarr/Working-with-Node#readme"
+}
