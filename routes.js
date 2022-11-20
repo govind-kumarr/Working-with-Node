@@ -1,8 +1,6 @@
 const fs = require("fs");
 const requestHandler = (req, res) => {
-
   const { url, method } = req;
-
 
   if (url === "/") {
     res.write("<html>");
@@ -14,9 +12,8 @@ const requestHandler = (req, res) => {
     return res.end();
   }
 
-
-  
   if (url === "/message" && method === "POST") {
+    console.log("installed nodemon");
     const body = [];
 
     //!This function will run every time newchunk of data is recieved
