@@ -10,6 +10,7 @@ Router.get("/", (req, res, next) => {
   res.render("shop", {
     pageTitle: "Shop Page EJS",
     products,
+    path: "/admin/add-product",
   });
   console.log(products);
   // res.sendFile(path.join(rootDir, "views", "shop.html"));
