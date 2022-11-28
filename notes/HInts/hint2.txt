@@ -1,0 +1,4 @@
+Avoiding an Error
+In the next lecture, we'll have a look at a different view engine: Handlebars.
+
+Due to a (temporary) breaking change introduced by the library authors (of the package we'll install in the next lecture), make sure you run npm install --save express-handlebars@3.0 before you start using that package in the next lecture.
