@@ -5,6 +5,7 @@ const express = require("express");
 const {
   getProducts,
   getCart,
+  postCart,
   getCheckout,
   getIndex,
   getOrders,
@@ -20,6 +21,8 @@ router.get("/products", getProducts);
 router.get("/products/:productId", getProduct);
 
 router.get("/cart", getCart);
+
+router.post("/cart", postCart);
 
 router.get("/orders", getOrders);
 
