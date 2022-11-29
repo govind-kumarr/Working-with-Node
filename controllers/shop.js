@@ -6,9 +6,16 @@ exports.getProducts = (req, res, next) => {
       prods: products,
       pageTitle: "All Products",
       path: "/products",
-      hasProducts: products.length > 0,
-      activeShop: true,
-      productCSS: true,
+    });
+  });
+};
+exports.getProduct = (req, res, next) => {
+  const { productId } = req.params;
+  Product.findById(productId, (product) => {
+    res.render("shop/product-detail", {
+      product,
+      path: `/products`,
+      pageTitle: "Product Details",
     });
   });
 };
