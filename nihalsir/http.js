@@ -18,7 +18,16 @@ const server = http.createServer((req, res) => {
       if (!err) res.end(data);
       console.log(err);
     });
-  } else res.end("Invalid URL: " + req.url);
+  } else if ((req.url = "/movies")) {
+    // const movie = fs.readFileSync("./movies.txt", { encoding: "utf8" });
+    const movieStream = fs.createReadStream("./movies.txt", {
+      encoding: "utf8",
+    });
+    movieStream.pipe(res);
+    // res.end(movie)
+  } else {
+    res.end("Invalid URL: " + req.url);
+  }
 });
 
 server.listen(3000, () => {
