@@ -14,6 +14,7 @@
     "nodemon": "^2.0.20"
   },
   "dependencies": {
+<<<<<<< HEAD
     "body-parser": "^1.18.3",
     "ejs": "^3.1.8",
     "express": "^4.16.3",
@@ -21,6 +22,20 @@
     "mongodb": "^5.0.1",
     "mongoose": "^6.9.2",
     "mysql2": "^1.6.1",
+=======
+    "bcrypt": "^5.1.0",
+    "body-parser": "^1.20.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "express-handlebars": "^3.0.2",
+    "jsonwebtoken": "^9.0.0",
+    "mongodb": "^4.13.0",
+    "mongoose": "^6.9.0",
+    "mysql2": "^2.3.3",
+    "passport": "^0.6.0",
+>>>>>>> c0acb26a79c7522352ac129ac18ccd02d18c73d0
     "pug": "^3.0.2",
     "sequelize": "^5.0.0-beta.11"
   }
