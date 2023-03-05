@@ -1,90 +1,34 @@
+const bodyParser = require("body-parser");
 const express = require("express");
-const jwt = require("jsonwebtoken");
-const { connection, Student } = require("./db");
-require("dotenv").config();
+const path = require("path");
+const { get404 } = require("./controllers/error");
+const { AdminRouter } = require("./routes/admin");
+const ShopRoutes = require("./routes/shop");
 
 const app = express();
+//!the path to the root directory
+const root = require("./utils/path");
 
+//!serving files statically
+app.use(express.static(path.join(root, "public")));
+
+//!Using Templating engines
+app.set("view engine", "ejs");
+app.set("views", "views");
+
+//!json converter and bodyparser
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 
-app.post("/signup", async (req, res) => {
-  let student = req.body;
-  try {
-    // console.log(student);
-    student = new Student(student);
-    await student.save();
-    res.send("added the student successfully");
-  } catch (err) {
-    console.log("Error saving the student");
-    console.log(err);
-    res.send("error creating student");
-  }
-});
+//!Admin Routes
+app.use("/admin", AdminRouter);
 
-app.post("/login", async (req, res) => {
-  const query = req.body;
-  console.log("got logn request");
-  try {
-    if (query.email && query.password) {
-      const result = await Student.find(query);
+//!Home Routes
+app.use("/", ShopRoutes);
 
-      if (result.length > 0) {
-        const token = jwt.sign({ foo: "bar" }, "itssecret");
-        res.send({ msg: "login success", token });
-      } else {
-        res.send("login failure");
-      }
-    }
-  } catch (err) {
-    console.log("Error occured while trying to login");
-    console.log(err);
-    res.statusCode(404).send("Login failed");
-  }
-});
+//!Error Route
+app.use(get404);
 
-app.get("/about", (req, res) => {
-  res.send("About us data");
-});
-app.get("/weather", (req, res) => {
-  // console.log(req.headers);
-  const token = req.headers["authorization"];
-  try {
-    const decode = jwt.verify(token, "itssecret");
-    console.log(decode);
-    decode
-      ? res.send("Weather data of your city")
-      : res.send("Please login to access weather");
-  } catch (err) {
-    console.log(err);
-    res.send("Error please login to access weather");
-  }
-});
-app.get("/purchased", (req, res) => {
-  const token = req.headers["authorization"];
-  try {
-    const decode = jwt.verify(token, "itssecret");
-    // console.log(decode);
-    decode
-      ? res.send("Your Pruchased data is available")
-      : res.send("Please login to access your purchased data");
-  } catch (err) {
-    console.log(err);
-    res.send("Error please login to access your purchased data");
-  }
-});
-app.get("/contact", (req, res) => {
-  res.send("contact data of your city");
-});
-
-app.get("/", (req, res) => {
-  res.send("Welcome to the application");
-});
-
-app.listen(process.env.port, async () => {
-  try {
-    await connection;
-    console.log("connection established at " + process.env.port);
-  } catch (err) {
-    console.log("Error connecting to " + process.env.port);
-  }
+app.listen(3001, () => {
+  console.log("App is listening on", 3001);
 });
