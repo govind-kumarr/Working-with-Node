@@ -4,6 +4,7 @@ const path = require("path");
 const { get404 } = require("./controllers/error");
 const { AdminRouter } = require("./routes/admin");
 const ShopRoutes = require("./routes/shop");
+const connection = require("./utils/db");
 
 const app = express();
 //!the path to the root directory
@@ -29,6 +30,8 @@ app.use("/", ShopRoutes);
 //!Error Route
 app.use(get404);
 
-app.listen(3001, () => {
-  console.log("App is listening on", 3001);
+connection((client) => {
+  console.log("Connection established\n", client);
+  console.log("App is running at port " + 3001);
+  app.listen(3001);
 });

@@ -19,6 +19,12 @@ exports.addToCart = (req, res, next) => {
   });
 };
 
+exports.deleteFromCart = (req, res, next) => {
+  const { prodId, productPrice } = req.body;
+  Cart.deleteFromCart(prodId, productPrice);
+  res.redirect("/cart");
+};
+
 exports.getProduct = (req, res, next) => {
   const { id } = req.params;
   Product.findById(id, (product) => {
@@ -41,9 +47,12 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-  res.render("shop/cart", {
-    path: "/cart",
-    pageTitle: "Your Cart",
+  Cart.getDetailedCart((cart) => {
+    res.render("shop/cart", {
+      path: "/cart",
+      pageTitle: "Your Cart",
+      products: cart.products,
+    });
   });
 };
 

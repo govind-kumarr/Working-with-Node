@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const rootDir = require("../utils/path");
+const Product = require("./product");
 
 const pathToCart = path.join(rootDir, "data", "cart.json");
 
@@ -37,6 +38,34 @@ module.exports = class Cart {
 
       fs.writeFile(pathToCart, JSON.stringify(cart), (err) => {
         if (err) console.log(err);
+      });
+    });
+  }
+  static getDetailedCart(cb) {
+    getCart((cart) => {
+      Product.getProducts((products) => {
+        let newProducts = cart?.products.map((product1) => {
+          let p = products.find((product2) => product2.id == product1.id);
+          p = { ...p, qty: product1.qty };
+          return p;
+        });
+        cart.products = newProducts;
+        cb(cart);
+      });
+    });
+  }
+  static deleteFromCart(id, productPrice) {
+    getCart((cart) => {
+      let newCartProducts = cart.products.filter((elem) => elem.id != id);
+      let thatProduct = cart.products.find((elem) => elem.id == id);
+      let newTotal = cart.totalPrice - thatProduct.qty * productPrice;
+      let newCart = {
+        products: newCartProducts,
+        totalPrice: newTotal,
+      };
+
+      fs.writeFile(pathToCart, JSON.stringify(newCart), (err) => {
+        if (err) console.log("Error while writing to cart\n", err);
       });
     });
   }
