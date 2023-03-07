@@ -2,7 +2,7 @@ const bodyParser = require("body-parser");
 const express = require("express");
 const path = require("path");
 const { get404 } = require("./controllers/error");
-const User = require("./model/user");
+const User = require("./model/user.model");
 const { AdminRouter } = require("./routes/admin");
 const ShopRoutes = require("./routes/shop");
 const { connection, getDb } = require("./utils/db");
@@ -26,7 +26,8 @@ app.use(express.json());
 app.use((req, res, next) => {
   User.findById("6407166a4831c738a9fbbe1e")
     .then((user) => {
-      req.user = user;
+      const { _id, name, email, cart } = user;
+      req.user = new User(_id, name, email, cart);
       next();
     })
     .catch((error) => console.log("Error User not found:\n" + error));

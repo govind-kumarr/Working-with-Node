@@ -12,8 +12,8 @@
                                     <%= p.title %> (<%= p.qty %>)
                                 </p>
                                 <form action="/delete-cart" method="POST">
-                                    <input type="hidden" value="<%= p.id %>" name="prodId">
-                                    <input type="hidden" value="<%= p.price %>" name="productPrice">
+                                    <input type="hidden" value="<%= p.productId %>" name="prodId">
+                                    <input type="hidden" value="<%= p.productPrice %>" name="productPrice">
                                     <button class="btn" type="submit">Delete</button>
                                 </form>
                             </li>

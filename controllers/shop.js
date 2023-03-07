@@ -1,5 +1,6 @@
 const Cart = require("../model/cart");
 const Product = require("../model/product.model");
+const User = require("../model/user.model");
 // const Product = require("../model/product");
 
 exports.getProducts = (req, res, next) => {
@@ -17,11 +18,16 @@ exports.getProducts = (req, res, next) => {
 };
 
 exports.addToCart = (req, res, next) => {
-  const { productId } = req.body;
-  Product.findById(productId, (product) => {
-    Cart.saveToCart(productId, +product.price);
-    res.redirect("/cart");
-  });
+  const { productId, productPrice } = req.body;
+  const User = req.user;
+  User.addToCart(productId, productPrice)
+    .then((newCart) => {
+      console.log(newCart);
+      res.redirect("/cart");
+    })
+    .catch((error) => {
+      console.log("error occured while adding to cart\n", error);
+    });
 };
 
 exports.deleteFromCart = (req, res, next) => {
@@ -56,13 +62,14 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-  Cart.getDetailedCart((cart) => {
-    res.render("shop/cart", {
-      path: "/cart",
-      pageTitle: "Your Cart",
-      products: cart.products,
-    });
-  });
+  const User = req.user;
+  User.getDetailedCart();
+
+  // res.render("shop/cart", {
+  //   path: "/cart",
+  //   pageTitle: "Your Cart",
+  //   products: user.cart.items,
+  // });
 };
 
 exports.getOrders = (req, res, next) => {
