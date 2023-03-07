@@ -2,9 +2,10 @@ const bodyParser = require("body-parser");
 const express = require("express");
 const path = require("path");
 const { get404 } = require("./controllers/error");
+const User = require("./model/user");
 const { AdminRouter } = require("./routes/admin");
 const ShopRoutes = require("./routes/shop");
-const connection = require("./utils/db");
+const { connection, getDb } = require("./utils/db");
 
 const app = express();
 //!the path to the root directory
@@ -21,6 +22,16 @@ app.set("views", "views");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 
+//!Verifying User
+app.use((req, res, next) => {
+  User.findById("6407166a4831c738a9fbbe1e")
+    .then((user) => {
+      req.user = user;
+      next();
+    })
+    .catch((error) => console.log("Error User not found:\n" + error));
+});
+
 //!Admin Routes
 app.use("/admin", AdminRouter);
 
@@ -30,8 +41,7 @@ app.use("/", ShopRoutes);
 //!Error Route
 app.use(get404);
 
-connection((client) => {
-  console.log("Connection established\n", client);
+connection(() => {
   console.log("App is running at port " + 3001);
   app.listen(3001);
 });

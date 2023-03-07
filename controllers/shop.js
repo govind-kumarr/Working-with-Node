@@ -1,14 +1,19 @@
 const Cart = require("../model/cart");
-const Product = require("../model/product");
+const Product = require("../model/product.model");
+// const Product = require("../model/product");
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll((products) => {
-    res.render("shop/product-list", {
-      prods: products,
-      pageTitle: "All Products",
-      path: "/products",
+  Product.fetchAll()
+    .then((products) => {
+      res.render("shop/product-list", {
+        prods: products,
+        pageTitle: "All Products",
+        path: "/products",
+      });
+    })
+    .catch((error) => {
+      console.log("Error while fetching products\n", error);
     });
-  });
 };
 
 exports.addToCart = (req, res, next) => {
@@ -27,23 +32,27 @@ exports.deleteFromCart = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   const { id } = req.params;
-  Product.findById(id, (product) => {
-    res.render("shop/product-detail", {
-      pageTitle: "Product Detail",
-      product,
-      path: `/products`,
-    });
-  });
+  Product.findById(id)
+    .then((product) => {
+      res.render("shop/product-detail", {
+        pageTitle: "Product Detail",
+        product,
+        path: `/products`,
+      });
+    })
+    .catch((err) => console.log("Product not found\n", err));
 };
 
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll((products) => {
-    res.render("shop/index", {
-      prods: products,
-      pageTitle: "Shop",
-      path: "/",
-    });
-  });
+  Product.fetchAll()
+    .then((products) => {
+      res.render("shop/index", {
+        prods: products,
+        pageTitle: "Shop",
+        path: "/",
+      });
+    })
+    .catch((error) => console.log("Error while fetching products\n", error));
 };
 
 exports.getCart = (req, res, next) => {
