@@ -36,7 +36,7 @@ class User {
       this.cart.totalPrice = +productPrice;
     } else {
       let index = this.cart.items.findIndex(
-        (elem) => elem.productId === productId
+        (elem) => elem.productId + "" == productId + ""
       );
       let found = this.cart.items[index];
       if (index != -1) {
@@ -51,8 +51,46 @@ class User {
   }
 
   getDetailedCart() {
+    const db = getDb();
     const productIds = this.cart.items.map((item) => item.productId);
-    console.log(productIds);
+    return db
+      .collection("products")
+      .find({ _id: { $in: productIds } })
+      .toArray()
+      .then((products) => {
+        let newProducts = products.map((p) => {
+          return {
+            ...p,
+            qty: this.cart.items.find(
+              (elem) => "" + elem.productId == "" + p._id
+            ).qty,
+          };
+        });
+        return newProducts;
+      })
+      .catch((error) => {
+        console.log("Error while loading cart products\n", error);
+        return er;
+      });
+  }
+  Delete(productId, productPrice) {
+    const db = getDb();
+    console.log(productId, productPrice);
+    console.log(this.cart.items);
+    const thatProductIndex = this.cart.items.findIndex(
+      (elem) => elem["productId"] + "" == new ObjectId(productId) + ""
+    );
+    this.cart.totalPrice -=
+      this.cart.items[thatProductIndex].qty * productPrice;
+    this.cart.items = this.cart.items.filter(
+      (elem, ind) => ind != thatProductIndex
+    );
+
+    return db
+      .collection("user")
+      .updateOne({ _id: this._id }, { $set: this })
+      .then((user) => user)
+      .catch((err) => err);
   }
 
   static findById(id) {

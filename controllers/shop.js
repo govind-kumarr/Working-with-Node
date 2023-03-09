@@ -32,8 +32,14 @@ exports.addToCart = (req, res, next) => {
 
 exports.deleteFromCart = (req, res, next) => {
   const { prodId, productPrice } = req.body;
-  Cart.deleteFromCart(prodId, productPrice);
-  res.redirect("/cart");
+  const User = req.user;
+  User.Delete(prodId, productPrice)
+    .then((result) => {
+      res.redirect("/");
+    })
+    .catch((error) => {
+      res.send("Error while deleting product from Cart");
+    });
 };
 
 exports.getProduct = (req, res, next) => {
@@ -63,13 +69,18 @@ exports.getIndex = (req, res, next) => {
 
 exports.getCart = (req, res, next) => {
   const User = req.user;
-  User.getDetailedCart();
-
-  // res.render("shop/cart", {
-  //   path: "/cart",
-  //   pageTitle: "Your Cart",
-  //   products: user.cart.items,
-  // });
+  User.getDetailedCart()
+    .then((products) => {
+      res.render("shop/cart", {
+        path: "/cart",
+        pageTitle: "Your Cart",
+        products: products,
+      });
+    })
+    .catch((error) => {
+      console.log("Error while fetching cart products", error);
+      res.send("Error while fetching cart products");
+    });
 };
 
 exports.getOrders = (req, res, next) => {
