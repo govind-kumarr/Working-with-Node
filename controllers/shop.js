@@ -1,7 +1,4 @@
-const Cart = require("../model/cart");
 const Product = require("../model/product.model");
-const User = require("../model/user.model");
-// const Product = require("../model/product");
 
 exports.getProducts = (req, res, next) => {
   Product.fetchAll()
